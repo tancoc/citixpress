@@ -180,7 +180,7 @@ const ViewModal = ({ session, users, report }) => {
 							{report.status === 'cancelled' ? (
 								<IconButton size="xs" cursor="not-allowed" icon={<FiDownloadCloud size={16} />} />
 							) : (
-								<chakra.a href={report.file.url}>
+								<chakra.a href={report.file.url} onClick={onSubmit}>
 									<IconButton size="xs" icon={<FiDownloadCloud size={16} />} />
 								</chakra.a>
 							)}
