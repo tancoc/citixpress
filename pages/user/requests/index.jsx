@@ -224,12 +224,12 @@ const ViewModal = ({ users, request }) => {
 
 					<Divider />
 
-					<Flex align="center" gap={3}>
+					<Flex align="center" gap={3} opacity={request.status === 'cancelled' ? 0.5 : 1}>
 						<Flex flex={1} align="center" gap={3}>
 							<Icon as={FiFolder} boxSize={8} color="accent-1" />
 
 							<Flex direction="column" w="calc(100% - 88px)">
-								<Text fontSize="sm" fontWeight="medium" color="accent-1" noOfLines={1}>
+								<Text fontSize="sm" fontWeight="medium" textDecoration={request.status === 'cancelled' && 'line-through'} color="accent-1" noOfLines={1}>
 									{request.file.name}
 								</Text>
 
@@ -243,9 +243,13 @@ const ViewModal = ({ users, request }) => {
 						</Flex>
 
 						<Flex position="absolute" right={6}>
-							<chakra.a href={request.file.url}>
-								<IconButton size="xs" icon={<FiDownloadCloud size={16} />} />
-							</chakra.a>
+							{request.status === 'cancelled' ? (
+								<IconButton size="xs" cursor="not-allowed" icon={<FiDownloadCloud size={16} />} />
+							) : (
+								<chakra.a href={request.file.url}>
+									<IconButton size="xs" icon={<FiDownloadCloud size={16} />} />
+								</chakra.a>
+							)}
 						</Flex>
 					</Flex>
 
@@ -378,7 +382,7 @@ const Requests = () => {
 						<Flex align="center" gap={3}>
 							<chakra.a href="https://res.cloudinary.com/ctx-hrms/raw/upload/v1669943957/ctx-hrms/sample-request-form_zfnyoz.docx">
 								<Button variant="tinted" size="lg" colorScheme="brand">
-									Download Request Format
+									Download Form
 								</Button>
 							</chakra.a>
 

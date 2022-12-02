@@ -29,14 +29,14 @@ const Employee = () => {
 	return (
 		<Container>
 			<Grid templateColumns="300px 1fr" alignItems="start" gap={6}>
-				<GridItem display="grid" gap={6}>
+				<GridItem display="grid" colSpan={{ base: 2, lg: 1 }} gap={6}>
 					<Avatar user={user} />
 					<Resume user={user} />
 					<Role user={user} />
 					<Status user={user} />
 				</GridItem>
 
-				<GridItem display="grid" gap={6}>
+				<GridItem display="grid" colSpan={{ base: 2, lg: 1 }} gap={6}>
 					<Information user={user} departments={departments} designations={designations} />
 					<Leaves user={user} />
 					<Reports user={user} />

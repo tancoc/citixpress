@@ -172,7 +172,32 @@ const AddReportModal = ({ session }) => {
 }
 
 const ViewModal = ({ users, report }) => {
+	const queryClient = useQueryClient()
 	const disclosure = useDisclosure()
+	const [isLoading, setIsLoading] = useState(false)
+	const toast = useToast()
+
+	const editReport = useMutation((data) => api.update('/reports', report._id, data), {
+		onSuccess: () => {
+			queryClient.invalidateQueries('employee_reports')
+			setIsLoading(false)
+			disclosure.onClose()
+
+			toast({
+				position: 'top',
+				duration: 1000,
+				render: () => <Toast title="Success" description="Report cancelled successfully." />
+			})
+		}
+	})
+
+	const onSubmit = () => {
+		setIsLoading(true)
+
+		editReport.mutate({
+			status: 'cancelled'
+		})
+	}
 
 	return (
 		<Modal title="Report Information" size="xl" toggle={(onOpen) => <IconButton size="xs" icon={<FiMoreHorizontal size={12} />} onClick={onOpen} />} disclosure={disclosure}>
@@ -198,12 +223,12 @@ const ViewModal = ({ users, report }) => {
 
 					<Divider />
 
-					<Flex align="center" gap={3}>
+					<Flex align="center" gap={3} opacity={report.status === 'cancelled' ? 0.5 : 1}>
 						<Flex flex={1} align="center" gap={3}>
 							<Icon as={FiFolder} boxSize={8} color="accent-1" />
 
 							<Flex direction="column" w="calc(100% - 88px)">
-								<Text fontSize="sm" fontWeight="medium" color="accent-1" noOfLines={1}>
+								<Text fontSize="sm" fontWeight="medium" textDecoration={report.status === 'cancelled' && 'line-through'} color="accent-1" noOfLines={1}>
 									{report.file.name}
 								</Text>
 
@@ -217,9 +242,13 @@ const ViewModal = ({ users, report }) => {
 						</Flex>
 
 						<Flex position="absolute" right={6}>
-							<chakra.a href={report.file.url}>
-								<IconButton size="xs" icon={<FiDownloadCloud size={16} />} />
-							</chakra.a>
+							{report.status === 'cancelled' ? (
+								<IconButton size="xs" cursor="not-allowed" icon={<FiDownloadCloud size={16} />} />
+							) : (
+								<chakra.a href={report.file.url}>
+									<IconButton size="xs" icon={<FiDownloadCloud size={16} />} />
+								</chakra.a>
+							)}
 						</Flex>
 					</Flex>
 
@@ -233,6 +262,12 @@ const ViewModal = ({ users, report }) => {
 						<Text fontSize="xs">{report.created.split(',')}</Text>
 					</Flex>
 				</Flex>
+
+				{report.status === 'unread' && (
+					<Button size="lg" colorScheme="red" isLoading={isLoading} onClick={() => onSubmit()}>
+						Cancel Report
+					</Button>
+				)}
 			</Flex>
 		</Modal>
 	)
@@ -253,9 +288,11 @@ const Reports = () => {
 						</Text>
 
 						<Flex align="center" gap={3}>
-							<Button variant="tinted" size="lg" colorScheme="brand">
-								Download Report Format
-							</Button>
+							<chakra.a href="https://res.cloudinary.com/ctx-hrms/raw/upload/v1669943957/ctx-hrms/Sample-Leave-Form_x6cmof.doc">
+								<Button variant="tinted" size="lg" colorScheme="brand">
+									Download Form
+								</Button>
+							</chakra.a>
 
 							<AddReportModal session={session} />
 						</Flex>

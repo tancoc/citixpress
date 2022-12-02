@@ -221,6 +221,70 @@ const AddModal = ({ users, isUsersFetched, departments, isDepartmentsFetched, de
 	)
 }
 
+const ShowPrint = ({ users, isUsersFetched, departments, isDepartmentsFetched, designations, isDesignationsFetched }) => {
+	const disclosure = useDisclosure()
+
+	return (
+		<Modal
+			header="off"
+			size="6xl"
+			toggle={(onOpen) => (
+				<Button variant="tinted" size="lg" colorScheme="brand" leftIcon={<FiPrinter size={16} />} onClick={onOpen}>
+					Print
+				</Button>
+			)}
+			disclosure={disclosure}
+		>
+			<Flex direction="column" border="1px solid black">
+				<Flex justify="space-evenly" gap={6} py={3} borderBottom="1px solid black">
+					<Flex flex={1} justify="center">
+						<Text fontSize="sm" fontWeight="semibold" color="accent-1">
+							Full Name
+						</Text>
+					</Flex>
+
+					<Flex flex={1} justify="center">
+						<Text fontSize="sm" fontWeight="semibold" color="accent-1">
+							Department
+						</Text>
+					</Flex>
+
+					<Flex flex={1} justify="center">
+						<Text fontSize="sm" fontWeight="semibold" color="accent-1">
+							Designation
+						</Text>
+					</Flex>
+				</Flex>
+
+				{isUsersFetched &&
+					users
+						.filter((user) => user.role === 'Employee')
+						.map((user) => (
+							<Flex py={3} key={user._id}>
+								<Flex flex={1} justify="center">
+									<Text fontSize="sm" fontWeight="medium" color="accent-1">
+										{user.name}
+									</Text>
+								</Flex>
+
+								<Flex flex={1} justify="center">
+									<Text fontSize="sm" fontWeight="medium" color="accent-1">
+										{user.department}
+									</Text>
+								</Flex>
+
+								<Flex flex={1} justify="center">
+									<Text fontSize="sm" fontWeight="medium" color="accent-1">
+										{user.designation}
+									</Text>
+								</Flex>
+							</Flex>
+						))}
+			</Flex>
+		</Modal>
+	)
+}
+
 const Employees = () => {
 	const router = useRouter()
 	const { data: users, isFetched: isUsersFetched } = useQuery(['users'], () => api.all('/users'))
@@ -237,9 +301,7 @@ const Employees = () => {
 						</Text>
 
 						<Flex align="center" gap={3}>
-							<Button variant="tinted" size="lg" colorScheme="brand" leftIcon={<FiPrinter size={16} />}>
-								Print
-							</Button>
+							<ShowPrint users={users} isUsersFetched={isUsersFetched} departments={departments} isDepartmentsFetched={isDepartmentsFetched} designations={designations} isDesignationsFetched={isDesignationsFetched} />
 							<AddModal users={users} isUsersFetched={isUsersFetched} departments={departments} isDepartmentsFetched={isDepartmentsFetched} designations={designations} isDesignationsFetched={isDesignationsFetched} />
 						</Flex>
 					</Flex>
