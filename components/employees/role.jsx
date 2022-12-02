@@ -26,10 +26,12 @@ const Role = ({ user }) => {
 	})
 
 	useEffect(() => {
-		if (watch('role') !== user.role) {
-			userRole.mutate({
-				role: watch('role')
-			})
+		if (user.role === 'Admin') {
+			if (watch('role') !== user.role) {
+				userRole.mutate({
+					role: watch('role')
+				})
+			}
 		}
 	}, [watch('role')])
 

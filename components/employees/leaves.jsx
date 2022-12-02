@@ -62,12 +62,12 @@ const ViewModal = ({ users, leave }) => {
 
 					<Divider />
 
-					<Flex align="center" gap={3}>
+					<Flex align="center" gap={3} opacity={leave.status === 'cancelled' ? 0.5 : 1}>
 						<Flex flex={1} align="center" gap={3}>
 							<Icon as={FiFolder} boxSize={8} color="accent-1" />
 
 							<Flex direction="column" w="calc(100% - 88px)">
-								<Text fontSize="sm" fontWeight="medium" color="accent-1" noOfLines={1}>
+								<Text fontSize="sm" fontWeight="medium" textDecoration={leave.status === 'cancelled' && 'line-through'} color="accent-1" noOfLines={1}>
 									{leave.file.name}
 								</Text>
 
@@ -81,9 +81,13 @@ const ViewModal = ({ users, leave }) => {
 						</Flex>
 
 						<Flex position="absolute" right={6}>
-							<chakra.a href={leave.file.url}>
-								<IconButton size="xs" icon={<FiDownloadCloud size={16} />} />
-							</chakra.a>
+							{leave.status === 'cancelled' ? (
+								<IconButton size="xs" cursor="not-allowed" icon={<FiDownloadCloud size={16} />} />
+							) : (
+								<chakra.a href={leave.file.url}>
+									<IconButton size="xs" icon={<FiDownloadCloud size={16} />} />
+								</chakra.a>
+							)}
 						</Flex>
 					</Flex>
 

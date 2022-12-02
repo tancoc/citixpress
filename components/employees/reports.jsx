@@ -35,12 +35,12 @@ const ViewModal = ({ users, report }) => {
 
 					<Divider />
 
-					<Flex align="center" gap={3}>
+					<Flex align="center" gap={3} opacity={report.status === 'cancelled' ? 0.5 : 1}>
 						<Flex flex={1} align="center" gap={3}>
 							<Icon as={FiFolder} boxSize={8} color="accent-1" />
 
 							<Flex direction="column" w="calc(100% - 88px)">
-								<Text fontSize="sm" fontWeight="medium" color="accent-1" noOfLines={1}>
+								<Text fontSize="sm" fontWeight="medium" textDecoration={report.status === 'cancelled' && 'line-through'} color="accent-1" noOfLines={1}>
 									{report.file.name}
 								</Text>
 
@@ -54,9 +54,13 @@ const ViewModal = ({ users, report }) => {
 						</Flex>
 
 						<Flex position="absolute" right={6}>
-							<chakra.a href={report.file.url}>
-								<IconButton size="xs" icon={<FiDownloadCloud size={16} />} />
-							</chakra.a>
+							{report.status === 'cancelled' ? (
+								<IconButton size="xs" cursor="not-allowed" icon={<FiDownloadCloud size={16} />} />
+							) : (
+								<chakra.a href={report.file.url}>
+									<IconButton size="xs" icon={<FiDownloadCloud size={16} />} />
+								</chakra.a>
+							)}
 						</Flex>
 					</Flex>
 

@@ -70,6 +70,10 @@ const LeaveSchema = mongoose.Schema(
 			date: {
 				type: String,
 				default: ''
+			},
+			message: {
+				type: String,
+				default: ''
 			}
 		},
 		cancelled: {
